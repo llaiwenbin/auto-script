@@ -1,0 +1,24 @@
+{
+  "name": "auto-script",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "gw": "node src/tasks/gw/index.js --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/llaiwenbin/auto-script.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "chalk": "^5.0.1",
+    "conf": "^10.1.2",
+    "crypto-js": "^4.1.1",
+    "moment": "^2.29.3",
+    "qs": "^6.11.0"
+  }
+}
