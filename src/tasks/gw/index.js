@@ -52,7 +52,7 @@ async function execute() {
 function after() {
     const haveCount = task.detailMsg.filter(res => +res.count).length
     
-    if(++count >= 200 || haveCount){
+    if(++count >= 500 || haveCount){
         count = 0
         task.send();
     }
