@@ -16,46 +16,70 @@ let count = 0;
         task.addErrMsg(error);
     }
 
-    await sleep(1000)
+    await sleep(2000)
     start()
 })()
+
+
+
+
+const promise1 = () => getProductionInfo({
+    'product_id': '3026',
+}).then(({ data }) => {
+    console.log(`【requestId】:${++requestId}\n【库存】:${data.quantity}`);
+    task.addDetailMsg({
+        title: 'r10 m18-150',
+        count: data.quantity
+    })
+})
+
+const promise2 = () => getProductionInfo({
+    'product_id': '3024',
+}).then(({ data }) => {
+    console.log(`【requestId】:${++requestId}\n【库存】:${data.quantity}`);
+    task.addDetailMsg({
+        title: 'r10 m45',
+        count: data.quantity
+    })
+})
+const promise3 = () => getProductionInfo({
+    'product_id': '2578',
+}).then(({ data }) => {
+    console.log(`【requestId】:${++requestId}\n【库存】:${data.quantity}`);
+    task.addDetailMsg({
+        title: 'M50 Mark II(白)',
+        count: data.quantity
+    })
+})
+
+const promise4 = () => getProductionInfo({
+    'product_id': '2579',
+}).then(({ data }) => {
+    console.log(`【requestId】:${++requestId}\n【库存】:${data.quantity}`);
+    task.addDetailMsg({
+        title: 'M50 Mark II(黑)',
+        count: data.quantity
+    })
+})
+
+
+
+
 
 async function before() {
     await task.init();
 }
 
 async function execute() {
-    await getProductionInfo({
-        'sess_id': 'sess_bcnicnargbr8o1a5m63hrtimil',
-        'product_id': '3026',
-    }).then(({ data }) => {
-        console.log(`【requestId】:${++requestId}\n【库存】:${data.quantity}`);
-        task.addDetailMsg({
-            title: 'r10 m18-150',
-            count: data.quantity
-        })
-    })
-    await sleep(1000)
-
-    await getProductionInfo({
-        'sess_id': 'sess_bcnicnargbr8o1a5m63hrtimil',
-        'product_id': '3024',
-    }).then(({ data }) => {
-        console.log(`【requestId】:${++requestId}\n【库存】:${data.quantity}`);
-        task.addDetailMsg({
-            title: 'r10 m45',
-            count: data.quantity
-        })
-    })
+    await Promise.all([promise1(), promise2(), promise3(), promise4()])
 }
 
 function after() {
     const haveCount = task.detailMsg.filter(res => +res.count).length
-    
-    if(++count >= 500 || haveCount){
+
+    if (++count >= 500 || haveCount) {
         count = 0
         task.send();
     }
     task.detailMsg = []
 }
-
