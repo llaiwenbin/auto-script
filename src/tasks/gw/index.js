@@ -13,11 +13,10 @@ let count = 0;
         await execute();
         after();
     } catch (error) {
-        task.addErrMsg(reason.stack);
-        task.send();
+        task.addErrMsg(error);
     }
 
-    await sleep(2000)
+    await sleep(1000)
     start()
 })()
 
@@ -31,14 +30,32 @@ async function execute() {
         'product_id': '3026',
     }).then(({ data }) => {
         console.log(`【requestId】:${++requestId}\n【库存】:${data.quantity}`);
-        task.setCount(data.quantity)
+        task.addDetailMsg({
+            title: 'r10 m18-150',
+            count: data.quantity
+        })
+    })
+    await sleep(1000)
+
+    await getProductionInfo({
+        'sess_id': 'sess_bcnicnargbr8o1a5m63hrtimil',
+        'product_id': '3024',
+    }).then(({ data }) => {
+        console.log(`【requestId】:${++requestId}\n【库存】:${data.quantity}`);
+        task.addDetailMsg({
+            title: 'r10 m45',
+            count: data.quantity
+        })
     })
 }
 
 function after() {
-    if(++count > 100 || +task.count){
+    const haveCount = task.detailMsg.filter(res => +res.count).length
+    
+    if(++count >= 200 || haveCount){
         count = 0
         task.send();
     }
+    task.detailMsg = []
 }
 
