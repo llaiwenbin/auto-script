@@ -1,7 +1,11 @@
+import process from 'process'
 import { getProductionInfo } from '../../api/gw.js'
 import { sleep } from '../../utils/index.js';
 import GwTask from '../../class/GwTask.js'
 
+process.on('unhandledRejection', error => {
+    console.log('我帮你处理了', error.message);
+});
 
 let task = new GwTask('官网 佳能相机');
 let requestId = 0
@@ -42,6 +46,7 @@ const promise2 = () => getProductionInfo({
         count: data.quantity
     })
 })
+
 const promise3 = () => getProductionInfo({
     'product_id': '2578',
 }).then(({ data }) => {
@@ -62,7 +67,7 @@ const promise4 = () => getProductionInfo({
     })
 })
 
-
+const promiseList = [promise1, promise2, promise3, promise4]
 
 
 
@@ -71,7 +76,10 @@ async function before() {
 }
 
 async function execute() {
-    await Promise.all([promise1(), promise2(), promise3(), promise4()])
+    await promiseList.reduce((pms, curr) => {
+        pms.finally(() => sleep(500).then(curr))
+        return curr
+    }, Promise.resolve())
 }
 
 function after() {
